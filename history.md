@@ -176,7 +176,7 @@
 
 <br>
 
-## TodoInput 컴포넌트 설정
+## **[ TodoInput 컴포넌트 설정 ]**
 
 ### - 인풋 박스 수정 시 값 같이 갱신
 
@@ -373,11 +373,99 @@
 
 > ![1567571630931](assets/1567571630931.png)
 
+<br>
 
+---
 
+## **[ TodoList 컴포넌트 설정 ]** 
 
+<br>
 
+### - 로컬 스트리지 데이터 -> 뷰 데이터에 저장, 뿌려주기
 
+```vue
+<template>
+  <section>
+      <ul>
+        <li v-for="todoItem in todoItems">
+          {{ todoItem }}
+        </li>
+      </ul>
+  </section>
+</template>
+
+<script>
+    export default {
+        data() {
+            return {
+               todoItems: []
+            }
+        },
+        created() {
+            if(localStorage.length > 0){
+                for(var i=0; i<localStorage.length; i++){
+                    this.todoItems.push(localStorage.key(i))
+                }
+            }
+        }
+    }
+</script>
+```
+
+<br>
+
+### - TodoList.vue CSS 변경
+
+```vue
+<template>
+  <section>
+      <ul>
+        <li v-for="todoItem in todoItems" class="shadow">
+          <i class="checkBtn fa fa-check" aria-hidden="true"></i>
+          {{ todoItem }}
+          <span class="removeBtn" type="button" @click="removeTodo(todoItem, index)">
+            <i class="fa fa-trash-alt" aria-hidden="true"></i>
+          </span>
+        </li>
+      </ul>
+  </section>
+</template>
+<style>
+  ul {
+    list-style-type: none;
+    padding-left: 0px;
+    text-align: left;
+    width: 400px;
+    margin: 20px auto;
+  }
+
+  li {
+    display: flex;
+    min-height: 50px;
+    height: 50px;
+    line-height: 50px;
+    margin: 0.5rem 0;
+    padding: 0 0.9rem;
+    background: white;
+    border-radius: 5px;
+  }
+
+  .checkBtn {
+    line-height: 45px;
+    color: #62acde;
+    margin-right: 15px;
+  }
+
+  .removeBtn {
+    margin-left: 8px;
+    color: #de4343;
+  }
+</style>
+```
+
+<br>
+
+### - 삭제 버튼 이벤트 추가
 
 
 
