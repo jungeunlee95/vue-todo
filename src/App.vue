@@ -2,7 +2,8 @@
   <div id="app">
     <TodoHeader></TodoHeader>
     <TodoInput v-on:addTodo="addTodo"></TodoInput>
-    <TodoList v-bind:propsdata="todoItems"></TodoList>
+                                          <!-- v-on:removeTodo약식 -->
+    <TodoList v-bind:propsdata="todoItems" @removeTodo="removeTodo"></TodoList>
     <TodoFooter v-on:removeAll="clearAll"></TodoFooter>
   </div>
 </template>
@@ -41,6 +42,10 @@
                 localStorage.clear();
                 this.todoItems = [];
                 alert("모든 할일 목록이 삭제되었습니다.")
+            },
+            removeTodo(todoItem, index){
+                localStorage.removeItem(todoItem);
+                this.todoItems.splice(index, 1); // 배열의 특정 인덱스 삭제
             }
         }
     }

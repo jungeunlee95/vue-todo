@@ -17,8 +17,7 @@
         props : ['propsdata'],
         methods: {
             removeTodo(todoItem, index) {
-                localStorage.removeItem(todoItem);
-                this.propsdata.splice(index, 1); // 배열의 특정 인덱스 삭제
+                this.$emit('removeTodo', todoItem, index);
             }
         }
     }

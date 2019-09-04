@@ -6,6 +6,14 @@
 
 > A Vue.js project  : [예시 사이트](https://vuejstodo-aa185.firebaseapp.com/)
 
+> 하위 컴포넌트에서 이벤트를 발생시켜 상위 컴포넌트로 신호를 보낼 때
+>
+> `$emit()`를 사용함
+>
+> 사용법 : `$emit(이벤트이름, 인자1, 인자2, 인자3, ...)`
+>
+> > 다만, 인자로 받은 데이터값은 상위에서 참고용으로만 활용하고 데이터 값은 변경하더라도 하위에 반영되지 않는다.
+
 <br>
 
 ## **[ 프로젝트 생성 ]**
@@ -710,6 +718,39 @@ export default {
 <br>
 
 ### - 이벤트 전달을 통해 할 일 삭제 기능 개선
+
+**App.vue** - `@removeTodo="removeTodo"` 추가, methods에 `removeTodo` 추가
+
+```html
+<!-- @removeTodo => v-on:removeTodo약식 -->
+<TodoList v-bind:propsdata="todoItems" @removeTodo="removeTodo"></TodoList>
+```
+
+``` js
+methods: {
+    removeTodo(todoItem, index){
+        localStorage.removeItem(todoItem);
+        this.todoItems.splice(index, 1); // 배열의 특정 인덱스 삭제
+    }
+}
+```
+
+
+
+**TodoList.vue** - `this.$emit('removeTodo', todoItem, index);` 수정
+
+```js
+export default {
+    props : ['propsdata'],
+    methods: {
+        removeTodo(todoItem, index) {
+            this.$emit('removeTodo', todoItem, index);
+        }
+    }
+}
+```
+
+
 
 
 
