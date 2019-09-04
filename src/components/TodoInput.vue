@@ -19,7 +19,7 @@
             addTodo(){
                 if (this.newTodoItem !== ""){
                     var value = this.newTodoItem && this.newTodoItem.trim();
-                    localStorage.setItem(value, value);
+                    this.$emit('addTodo', value)
                     this.clearInput();
                 }else{
                     alert("할 일을 적어주세요!")

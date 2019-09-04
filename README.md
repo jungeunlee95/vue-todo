@@ -59,3 +59,8 @@ For detailed explanation on how things work, consult the [docs for vue-loader](h
 
 [보러가기](https://github.com/jungeunlee95/vue-todo/blob/master/history.md)
 
+<br>
+
+## node express
+
+[express와 vuejs연동](https://m.blog.naver.com/kangminser88/221146020394)

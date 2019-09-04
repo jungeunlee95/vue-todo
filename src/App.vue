@@ -1,9 +1,9 @@
 <template>
   <div id="app">
     <TodoHeader></TodoHeader>
-    <TodoInput></TodoInput>
-    <TodoList></TodoList>
-    <TodoFooter></TodoFooter>
+    <TodoInput v-on:addTodo="addTodo"></TodoInput>
+    <TodoList v-bind:propsdata="todoItems"></TodoList>
+    <TodoFooter v-on:removeAll="clearAll"></TodoFooter>
   </div>
 </template>
 
@@ -14,11 +14,34 @@
     import TodoFooter from "./components/TodoFooter";
 
     export default {
+        data() {
+            return {
+                todoItems: []
+            }
+        },
         components: {
             'TodoHeader': TodoHeader,
             'TodoInput': TodoInput,
             'TodoList': TodoList,
             'TodoFooter': TodoFooter,
+        },
+        created() {
+            if (localStorage.length > 0) {
+                for (var i = 0; i < localStorage.length; i++) {
+                    this.todoItems.push(localStorage.key(i))
+                }
+            }
+        },
+        methods: {
+            addTodo(todoItem) {
+                localStorage.setItem(todoItem, todoItem);
+                this.todoItems.push(todoItem);
+            },
+            clearAll() {
+                localStorage.clear();
+                this.todoItems = [];
+                alert("모든 할일 목록이 삭제되었습니다.")
+            }
         }
     }
 </script>

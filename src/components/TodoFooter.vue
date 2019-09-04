@@ -8,8 +8,7 @@
     export default {
         methods:{
             clearTodo() {
-                localStorage.clear();
-                alert("모든 할일 목록이 삭제되었습니다.")
+                this.$emit('removeAll')
             }
         }
     }

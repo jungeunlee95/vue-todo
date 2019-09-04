@@ -8,7 +8,7 @@
 
 <br>
 
-## 프로젝트 생성
+## **[ 프로젝트 생성 ]**
 
 > `$ mkdir vue-todo`
 >
@@ -45,7 +45,7 @@
 
 <br>
 
-## index.html link, meta tag 추가
+### - index.html link, meta tag 추가
 
 ```html
 <!--viewport meta tag-->
@@ -61,7 +61,7 @@
 
 <br>
 
-## 컴포넌트 생성
+### - 컴포넌트 생성
 
 - 사용할 컴포넌트는 총 4개.
   1. TodoHeader
@@ -93,7 +93,7 @@
 
 <br>
 
-## App.vue에 컴포넌트 추가
+### - App.vue에 컴포넌트 추가
 
 ```vue
 <template>
@@ -128,7 +128,7 @@
 
 <br>
 
-## Vue 프로젝트 실행
+### - Vue 프로젝트 실행
 
 `npm run dev`
 
@@ -136,7 +136,7 @@
 
 <br>
 
-## style 지정
+### - style 지정
 
 **App.vue**
 
@@ -539,15 +539,177 @@
 </style>
 ```
 
+> ![1567573874476](assets/1567573874476.png)
 
+<br>
 
+------
 
+## **[ 기능 개선 ]** 
 
+### - props를 통해 할일 추가, 삭제 기능 개선
 
+```
+App.vue의 todoItems 리스트를
+TodoList.vue에서 props속성으로 propsdata로 받을 것임
+```
 
+**App.vue** -> `data(){}` 추가 후 TodoList 컴포넌트에 props로 전달
 
+```vue
+<template>
+  <div id="app">
+    <TodoHeader></TodoHeader>
+    <TodoInput v-on:addTodo="addTodo"></TodoInput>
+    <TodoList v-bind:propsdata="todoItems"></TodoList>
+    <TodoFooter></TodoFooter>
+  </div>
+</template>
 
+<script>
+    ... 코드생략 ...
+    
+    export default {
+        data() {
+          return {
+              todoItems: []
+          }
+        },
+        
+    ... 코드생략 ...
+    
+    }
+</script>
+```
 
+<br>
+
+**TodoList.vue**에 props 속성 추가
+
+```js
+export default {
+    ... 코드생략 ...
+    
+    props : ['propsdata'],
+        
+    ... 코드생략 ...
+}
+```
+
+<br>
+
+**TodoInput.vue** - `this.$emit('addTodo', value)` 추가
+
+```js
+methods:{
+    ... 코드생략 ...
+    
+    addTodo(){
+        if (this.newTodoItem !== ""){
+            var value = this.newTodoItem && this.newTodoItem.trim();
+            this.$emit('addTodo', value)
+            this.clearInput();
+            
+   ... 코드생략 ...
+}
+```
+
+<br>
+
+**App.vue**  - 메소드 추가
+
+```js
+... 코드 생략 ...
+
+    methods: {
+        addTodo(todoItem) {
+            localStorage.setItem(todoItem, todoItem);
+            this.todoItems.push(todoItem);
+        }
+    },
+    created() {
+        if(localStorage.length > 0){
+            for(var i=0; i<localStorage.length; i++){
+                this.todoItems.push(localStorage.key(i))
+            }
+        }
+    },
+
+... 코드 생략 ...
+```
+
+<br>
+
+**TodoList.vue**
+
+1. template 변경
+
+   `<li v-for="(todoItem, index) in todoItems" class="shadow">`
+
+   => `<li v-for="(todoItem, index) in propsdata" class="shadow">`
+
+2. vuejs코드 수정
+
+   ```js
+       data() {
+           return {
+               todoItems: []
+           }
+       },
+       created() {
+           if(localStorage.length > 0){
+               for(var i=0; i<localStorage.length; i++){
+                   this.todoItems.push(localStorage.key(i))
+               }
+           }
+       },
+   ```
+
+   코드 제거
+
+<br>
+
+### - 이벤트 전달을 통해 Clear All기능 개선
+
+- 하위 컴포넌트 이벤트 이름 - `removeAll`
+- 상위 컴포넌트 App에서 받아 실행시킬 메소드 이름 `clearAll()`
+
+**App.vue**
+
+1. `v-on:removeAll="clearAll"` 추가 
+
+   ```vue
+   <TodoFooter v-on:removeAll="clearAll"></TodoFooter>
+   ```
+
+2. methods에 `clearAll()` 추가
+
+   ```js
+   methods: {
+       clearAll() {
+           localStorage.clear();
+           this.todoItems = [];
+       }
+   }
+   ```
+
+**TodoFooter.vue**
+
+`clearTodo()` 수정 -> `this.$emit('removeAll')`
+
+```js
+export default {
+    methods:{
+        clearTodo() {
+            this.$emit('removeAll')
+        }
+    }
+}
+```
+
+<br>
+
+### - 이벤트 전달을 통해 할 일 삭제 기능 개선
 
 
 
