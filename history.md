@@ -467,6 +467,41 @@
 
 ### - 삭제 버튼 이벤트 추가
 
+```vue
+<template>
+  <section>
+      <ul>
+        <li v-for="(todoItem, index) in todoItems" class="shadow">
+          <i class="checkBtn fa fa-check" aria-hidden="true"></i>
+          {{ todoItem }}
+          <span class="removeBtn" type="button" @click="removeTodo(todoItem, index)">
+            <i class="fa fa-trash-alt" aria-hidden="true"></i>
+          </span>
+        </li>
+      </ul>
+  </section>
+</template>
+
+<script>
+... 코드 생략 ...
+        methods: {
+            removeTodo(todoItem, index) {
+                localStorage.removeItem(todoItem);
+                this.todoItems.splice(index, 1); // 배열의 특정 인덱스 삭제
+            }
+        }
+    }
+</script>
+```
+
+<br>
+
+------
+
+## **[ TodoFooter 컴포넌트 설정 ]** 
+
+### - 모두 한번에 삭제하기 이벤트 추가
+
 
 
 
