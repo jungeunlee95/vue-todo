@@ -24,15 +24,19 @@
 > ? Use sass? (y/N) N
 > ? Use sass? No
 > 
->    vue-cli · Generated "vue-todo".
+> vue-cli · Generated "vue-todo".
 > 
->    To get started:
+> To get started:
 > 
->      npm install
->      npm run dev
+>   npm install
+>   npm run dev
 > ```
 >
-> 
+> <br>
+>
+> **프로젝트 실행**
+>
+> `npm run dev`
 
 ## Build Setup
 
@@ -48,3 +52,10 @@ npm run build
 ```
 
 For detailed explanation on how things work, consult the [docs for vue-loader](http://vuejs.github.io/vue-loader).
+
+<br>
+
+## 프로젝트 history
+
+[보러가기]()
+
