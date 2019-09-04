@@ -57,5 +57,5 @@ For detailed explanation on how things work, consult the [docs for vue-loader](h
 
 ## 프로젝트 history
 
-[보러가기]()
+[보러가기](https://github.com/jungeunlee95/vue-todo/blob/master/history.md)
 

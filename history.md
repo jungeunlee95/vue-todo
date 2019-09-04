@@ -134,6 +134,291 @@
 
 ![1567564378957](assets/1567564378957.png)
 
+<br>
+
+## style 지정
+
+**App.vue**
+
+```vue
+<style>
+    body {
+        text-align: center;
+        background-color: #F6F6F8;
+    }
+
+    input {
+        border-style: groove;
+        width: 200px;
+    }
+
+    button {
+        border-style: groove;
+    }
+
+    .shadow{
+        box-shadow: 5px 10px 10px rgba(0, 0, 0, 0.03);
+    }
+</style>
+```
+
+**TodoHeader.vue**
+
+```vue
+<style>
+    h1 {
+        color: #2F3B52;
+        font-weight: 900;
+        margin: 2.5rem 0 1.5rem;
+    }
+</style>
+```
+
+<br>
+
+## TodoInput 컴포넌트 설정
+
+### - 인풋 박스 수정 시 값 같이 갱신
+
+**TodoInput.vue**
+
+```vue
+<template>
+	<div>
+        <input type="text" v-model="newTodoItem">
+        <button>추가</button>
+    </div>
+</template>
+<script>
+    export default {
+        data(){
+            return {
+                newTodoItem: ''
+            }
+        }
+    }
+</script>
+
+<style>
+</style>
+```
+
+> ![1567565230172](assets/1567565230172.png)
+
+<br>
+
+### - 버튼 클릭으로 입력 값 받기
+
+```vue
+<template>
+	<div>
+        <input type="text" v-model="name">
+        <input type="text" v-model="newTodoItem">
+        <button @click="addTodo">추가</button>
+    </div>
+</template>
+
+<script>
+    export default {
+        data(){
+            return {
+                name: '',
+                newTodoItem: '',
+            }
+        },
+        methods:{
+            addTodo(){
+                console.log(this.name)
+                console.log(this.newTodoItem)
+            }
+        }
+    }
+</script>
+```
+
+<br>
+
+### - 입력받은 텍스트 로컬 스토리지에 저장하기
+
+`localStorage.setItem()`
+
+```vue
+...
+		},
+        methods:{
+            addTodo(){
+                localStorage.setItem(this.name, this.name)
+                localStorage.setItem(this.newTodoItem, this.newTodoItem)
+            }
+        }
+    }
+    
+...
+```
+
+> 크롬 개발자 도구에서 확인하기
+>
+> ![1567565671115](assets/1567565671115.png)
+
+<br>
+
+### - addTodo() 예외처리 코드, focus()주기
+
+1. input 태그에 `ref="todo"` 추가
+2. js에서 `this.$refs.todo.focus();` 추가
+
+```vue
+<template>
+  <div>
+    <input type="text" ref="todo" v-model="newTodoItem">
+    <button @click="addTodo">추가</button>
+  </div>
+</template>
+
+<script>
+...
+
+        methods:{
+            addTodo(){
+                if (this.newTodoItem !== ""){
+                    var value = this.newTodoItem && this.newTodoItem.trim();
+                    localStorage.setItem(value, value);
+                    this.clearInput();
+                }else{
+                    alert("할 일을 적어주세요!")
+                    this.$refs.todo.focus(); 
+                }
+            },
+
+...
+</script>
+```
+
+<br>
+
+### - TodoInput CSS 변경
+
+```vue
+<template>
+  <div class="inputBox shadow container">
+    <input type="text" ref="todo" v-model="newTodoItem" placeholder="할 일을 입력하세요."
+            v-on:keyup.enter="addTodo">
+    <span class="addContainer" vo-on:click="addTodo">
+        <i class="addBtn fas fa-plus" aria-hidden="true"></i>
+    </span>
+  </div>
+</template>
+
+<script>
+    export default {
+        data(){
+            return {
+                newTodoItem: '',
+            }
+        },
+        methods:{
+            addTodo(){
+                if (this.newTodoItem !== ""){
+                    var value = this.newTodoItem && this.newTodoItem.trim();
+                    localStorage.setItem(value, value);
+                    this.clearInput();
+                }else{
+                    alert("할 일을 적어주세요!")
+                    this.$refs.todo.focus();
+                }
+            },
+            clearInput(){
+                this.newTodoItem = '';
+            }
+        }
+    }
+</script>
+
+<style>
+  input:focus{
+    outline: none;
+  }
+
+  .inputBox{
+    text-align: center;
+    background: white;
+    height: 50px;
+    width: 400px;
+    line-height: 50px;
+    border-radius: 5px;
+    margin: 0 auto;
+  }
+
+  .inputBox input{
+    border-style: none;
+    font-size: 0.9rem;
+    width: 300px;
+    margin-left: 30px;
+  }
+
+  .addContainer{
+    float: right;
+    background: linear-gradient(to right, #6478FB, #8763FB);
+    display: block;
+    width: 3rem;
+    border-radius: 0 5px 5px 0;
+  }
+  .addBtn{
+    color: white;
+    vertical-align: middle;
+  }
+</style>
+
+```
+
+> ![1567571630931](assets/1567571630931.png)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
