@@ -63,4 +63,4 @@ For detailed explanation on how things work, consult the [docs for vue-loader](h
 
 ## node express
 
-[express와 vuejs연동](https://m.blog.naver.com/kangminser88/221146020394)
+[express와 vuejs연동방법](https://m.blog.naver.com/kangminser88/221146020394)

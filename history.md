@@ -750,23 +750,267 @@ export default {
 }
 ```
 
+<br>
 
+------
 
+## **[ 기능 개선 2]** 
 
+**참고자료**
 
+- [뷰 애니메이션 클래스 공식문서](https://vuejs.org/v2/guide/transitions#Transition-Classes)
+- [뷰 공식문서 - 예제 소스 ](https://vuejs.org/v2/examples/)
 
+<br>
 
+### - 뷰 애니메이션 추가
 
+**TodoList.vue 코드 수정**
 
+[수정 전]
 
+```vue
+<template>
+  <section>
+      <ul>
+        <li v-for="(todoItem, index) in propsdata" class="shadow">
+          <i class="checkBtn fa fa-check" aria-hidden="true"></i>
+          {{ todoItem }}
+          <span class="removeBtn" type="button" @click="removeTodo(todoItem, index)">
+            <i class="fa fa-trash-alt" aria-hidden="true"></i>
+          </span>
+        </li>
+      </ul>
+  </section>
+</template>
+```
 
+[수정 후]
 
+```vue
+<template>
+  <section>
+      <transition-group name="list" tag="ul">
+        <li v-for="(todoItem, index) in propsdata" :key="todoItem" class="shadow">
+          <i class="checkBtn fa fa-check" aria-hidden="true"></i>
+          {{ todoItem }}
+          <span class="removeBtn" type="button" @click="removeTodo(todoItem, index)">
+            <i class="fa fa-trash-alt" aria-hidden="true"></i>
+          </span>
+        </li>
+      </transition-group>
+  </section>
+</template>
+```
 
+- `<transition-group>` 태그는 목록에 애니메이션을 추가할 때 사용되는 태그이다.
+- `name=""` 속성은 css와 연관이 있다.
+- `tag=""` 속성에 애니메이션이 들어갈 HTML 태그 이름을 지정하면 된다.
+- `<li>`태그에 `:key`속성은 `v-bind:key`의 약어이다.
+  - 목록에 애니메이션을 적용하려면 `<transition-group>`안의 대상 태그에 `:key`속성을 지정해야한다.
+  - `:key`속성에는 유일하게 구분되는 값을 넣어야한다.
+  - `:key`속성은 `v-for` 디렉티브를 사용할 때 꼭 지정해주는 것이 좋다.
+    - 뷰는 특정 아이템이 삭제되거나 추가될 때, 순서를 다시 조정하지 않고 내부적으로 전체 아이템 순서를 제어한다. `:key`속성을 사용하면 이런 작업을 효율적으로 할 수 있다.
 
+[css추가] - [뷰 애니메이션 클래스 공식문서](https://vuejs.org/v2/guide/transitions#Transition-Classes)
 
+```css
+.list-enter-active, .list-leave-active {
+    transition : all 1s;
+}
 
+.list-enter, .list-leave-to {
+    opacity: 0;
+    transform: translateY(30px);
+}
+```
 
+<br>
 
+### - 뷰 모달 추가
+
+[뷰 공식문서 - 예제 소스 ](https://vuejs.org/v2/examples/)
+
+`components/common/Modal.vue`파일 만들기
+
+> ![1567643123882](assets/1567643123882.png)
+
+**Modal.vue**
+
+```vue
+<template>
+    <transition name="modal">
+        <div class="modal-mask">
+            <div class="modal-wrapper">
+                <div class="modal-container">
+
+                    <div class="modal-header">
+                        <slot name="header">
+                            default header
+                        </slot>
+                    </div>
+
+                    <div class="modal-body">
+                        <slot name="body">
+                        </slot>
+                    </div>
+
+                    <div class="modal-footer">
+                        <slot name="footer">
+                            default footer
+                            <button class="modal-default-button" @click="$emit('close')">
+                                OK
+                            </button>
+                         </slot>
+                    </div>
+                </div>
+             </div>
+        </div>
+    </transition>
+</template>
+
+<script>
+    export default {
+        name: "Modal"
+    }
+</script>
+
+<style scoped>
+    .modal-mask {
+        position: fixed;
+        z-index: 9998;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, .5);
+        display: table;
+        transition: opacity .3s ease;
+    }
+
+    .modal-wrapper {
+        display: table-cell;
+        vertical-align: middle;
+    }
+
+    .modal-container {
+        width: 300px;
+        margin: 0px auto;
+        padding: 20px 30px;
+        background-color: #fff;
+        border-radius: 2px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, .33);
+        transition: all .3s ease;
+        font-family: Helvetica, Arial, sans-serif;
+    }
+
+    .modal-header h3 {
+        margin-top: 0;
+        color: #42b983;
+    }
+
+    .modal-body {
+        margin: 20px 0;
+    }
+
+    .modal-default-button {
+        float: right;
+    }
+
+    /*
+    * The following styles are auto-applied to elements with
+    * transition="modal" when their visibility is toggled
+    * by Vue.js.
+    *
+    * You can easily play with the modal transition by editing
+    * these styles.
+    */
+
+    .modal-enter {
+        opacity: 0;
+    }
+
+    .modal-leave-active {
+        opacity: 0;
+    }
+
+    .modal-enter .modal-container,
+    .modal-leave-active .modal-container {
+        -webkit-transform: scale(1.1);
+        transform: scale(1.1);
+    }
+</style>
+```
+
+<br>
+
+**TodoInput.vue 수정**
+
+[template - modal 추가]
+
+```vue
+<template>
+	<div class="inputBox shadow container">
+        ... 코드 생략 ...
+        
+        <modal v-if="showModal" @close="showModal = false">
+            <h3 slot="header"> 경고 </h3> <!--모달 헤더-->
+            <span slot="footer" @click="showModal = false">
+                할 일을 입력해주세요 !!
+                <i class="closeModalBtn fa fa-times" aria-hidden="true"></i>
+        </span>
+        </modal>
+    </div>
+</template>
+```
+
+[scripte - 모달 컴포넌트 등록]
+
+- Modal.vue 불러오기 : `import Modal from './common/Modal'` 
+- data에 모달 동작 플래그 값 설정 : `showModal : false,` 
+- 텍스트 미 입력시 모달 동작 : `this.showModal = !this.showModal;`
+- 모달 컴포넌트 등록 : `components: { Modal: Modal  }`
+
+```vue
+<script>
+    import Modal from './common/Modal'
+
+    export default {
+        data() {
+            return {
+                newTodoItem: '',
+                showModal : false,
+            }
+        },
+        methods: {
+            addTodo() {
+                if (this.newTodoItem !== "") {
+                    var value = this.newTodoItem && this.newTodoItem.trim();
+                    this.$emit('addTodo', value)
+                    this.clearInput();
+                } else {
+                    // alert("할 일을 적어주세요!")
+                    // this.$refs.todo.focus();
+                    this.showModal = !this.showModal;
+                }
+            },
+            clearInput() {
+                this.newTodoItem = '';
+            }
+        },
+        watch:{
+            showModal: function(){
+                this.$refs.todo.focus();
+            }
+        },
+        components: {
+            Modal: Modal
+        }
+    }
+</script>
+```
+
+> ![1567644185835](assets/1567644185835.png)
 
 
 
